@@ -1,55 +1,49 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Napier Bailiffs NOI Generator</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Cover Sheet</h1>
 
     <h1>Generate PDF</h1>
     <label for="template">Select Template:</label>
     <select id="template">
-        <option value="NOI Retain Vehicle.pdf">NOI Retain Vehicle</option>
-        <option value="NOI Retain Vessel.pdf">NOI Retain Vessel</option>
-        <option value="NOI Sell Vehicle.pdf">NOI Sell Vehicle</option>
-        <option value="NOI Sell Vessel.pdf">NOI Sell Vessel</option>
+      <option value="NOI Retain Vehicle.pdf">NOI Retain Vehicle</option>
+      <option value="NOI Retain Vessel.pdf">NOI Retain Vessel</option>
+      <option value="NOI Sell Vehicle.pdf">NOI Sell Vehicle</option>
+      <option value="NOI Sell Vessel.pdf">NOI Sell Vessel</option>
     </select>
 
     <label for="clientName">Client Name:</label>
-    <input type="text" id="clientName">
+    <input type="text" id="clientName" />
 
     <h2 id="result"></h2>
 
     <button id="generateButton">Generate PDF</button>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const selection = document.getElementById("template");
-            const clientNameInput = document.getElementById("clientName");
-            const result = document.getElementById("result");
-            const generateButton = document.getElementById("generateButton");
+      const { ipcRenderer } = require('electron');
+      document.addEventListener("DOMContentLoaded", () => {
+        const selection = document.getElementById("template");
+        const clientNameInput = document.getElementById("clientName");
+        const result = document.getElementById("result");
+        const generateButton = document.getElementById("generateButton");
 
-            generateButton.addEventListener("click", () => {
-                const templatePath = selection.value;
-                const clientName = clientNameInput.value;
-                const sourceUrl = `../templates/${templatePath}?clientName=${encodeURIComponent(clientName)}`;
-
-                fetch(sourceUrl)
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const a = document.createElement('a');
-                        const url = window.URL.createObjectURL(blob);
-                        a.href = url;
-                        a.download = templatePath;
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        result.innerText = `PDF generated: ${templatePath}`;
-                    })
-                    .catch(error => console.error('Error fetching PDF:', error));
-            });
+        generateButton.addEventListener("click", () => {
+            const templatePath = selection.value;
+            const clientName = clientNameInput.value;
+            ipcRenderer.send('generate-pdf', { templatePath, clientName });
         });
+
+        ipcRenderer.on('pdf-generated', (event, pdfBytes) => {
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            window.open(url);
+            result.innerText = `PDF generated: ${templatePath}`;
+        });
+      });
     </script>
-</body>
+  </body>
 </html>

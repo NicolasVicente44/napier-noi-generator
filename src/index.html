@@ -3,11 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <title>Napier Bailiffs NOI Generator</title>
+    <link rel="stylesheet" href="index.css">
+
   </head>
   <body>
-    <h1>Cover Sheet</h1>
+    <img src="https://bailiff.on.ca/assets/images/layout/logo.png" alt="">
+    <h1>NOI Cover Sheet</h1>
 
-    <h1>Generate PDF</h1>
+    <h1>Generate NOI PDF</h1>
     <label for="template">Select Template:</label>
     <select id="template">
       <option value="NOI Retain Vehicle.pdf">NOI Retain Vehicle</option>
@@ -15,87 +18,115 @@
       <option value="NOI Sell Vehicle.pdf">NOI Sell Vehicle</option>
       <option value="NOI Sell Vessel.pdf">NOI Sell Vessel</option>
     </select>
+    <hr class="black-hr">
 
     <label for="clientName">Client Name:</label>
     <input type="text" id="clientName" />
+    <hr class="gray-hr">
 
     <label for="assetDescription">Asset Description:</label>
     <input type="text" id="assetDescription" />
+    <hr class="black-hr">
 
     <label for="VIN_serialNum">VIN/Serial Number:</label>
     <input type="text" id="VIN_serialNum" />
+    <hr class="gray-hr">
 
     <label for="licensePlate">License Plate:</label>
     <input type="text" id="licensePlate" />
+    <hr class="black-hr">
 
     <label for="registeredOwner">Registered Owner:</label>
     <input type="text" id="registeredOwner" />
+    <hr class="gray-hr">
 
     <label for="lienHolder">Lien Holder:</label>
     <input type="text" id="lienHolder" />
+    <hr class="black-hr">
 
     <label for="daysOfStorage">Days of Storage:</label>
     <input type="text" id="daysOfStorage" />
+    <hr class="gray-hr">
 
     <label for="storageRate">Storage Rate:</label>
     <input type="text" id="storageRate" />
+    <hr class="black-hr">
 
     <label for="amountOfArrears">Amount of Arrears:</label>
     <input type="text" id="amountOfArrears" />
+    <hr class="gray-hr">
 
     <label for="daysOfStorageCost">Days of Storage Cost:</label>
     <input type="text" id="daysOfStorageCost" />
+    <hr class="black-hr">
 
     <label for="bailiffCosts">Bailiff Costs:</label>
     <input type="text" id="bailiffCosts" />
+    <hr class="gray-hr">
 
     <label for="totalOfStorageRate">Total of Storage Rate:</label>
     <input type="text" id="totalOfStorageRate" />
+    <hr class="black-hr">
 
     <label for="towingCost">Towing Cost:</label>
     <input type="text" id="towingCost" />
+    <hr class="gray-hr">
 
     <label for="storageCosts">Storage Costs:</label>
     <input type="text" id="storageCosts" />
+    <hr class="black-hr">
 
     <label for="NOICosts">NOI Costs:</label>
     <input type="text" id="NOICosts" />
+    <hr class="gray-hr">
 
     <label for="HSTOnCosts">HST On Costs:</label>
     <input type="text" id="HSTOnCosts" />
+    <hr class="black-hr">
 
     <label for="totalCostsToDate">Total Costs to Date:</label>
     <input type="text" id="totalCostsToDate" />
+    <hr class="gray-hr">
 
     <label for="amountDueToRedeem">Amount Due to Redeem:</label>
     <input type="text" id="amountDueToRedeem" />
+    <hr class="black-hr">
 
     <label for="closingDate">Closing Date:</label>
     <input type="text" id="closingDate" />
+    <hr class="gray-hr">
 
     <label for="formDate">Form Date:</label>
     <input type="text" id="formDate" />
+    <hr class="black-hr">
 
     <label for="dateOfAdditionalCharges">Date of Additional Charges:</label>
     <input type="text" id="dateOfAdditionalCharges" />
+    <hr class="gray-hr">
 
     <label for="repoDate">Repo Date:</label>
     <input type="text" id="repoDate" />
+    <hr class="black-hr">
 
     <label for="dateNOISent">Date NOI Sent:</label>
     <input type="text" id="dateNOISent" />
+    <hr class="gray-hr">
 
     <label for="staffAffidavitName">Staff Affidavit Name:</label>
     <input type="text" id="staffAffidavitName" />
+    <hr class="black-hr">
 
     <label for="registeredOwnerCont">Registered Owner Contact:</label>
     <input type="text" id="registeredOwnerCont" />
+    <hr class="gray-hr">
 
     <label for="Affidavit_Date1">Affidavit Date 1:</label>
     <input type="text" id="Affidavit_Date1" />
+    <hr class="black-hr">
 
     <label for="Affidavit_Date2">Affidavit Date 2:</label>
     <input type="text" id="Affidavit_Date2" />
+    <hr class="gray-hr">
 
     <h2 id="result"></h2>
 

@@ -5,8 +5,8 @@ const { PDFDocument } = require("pdf-lib");
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1600,
+    height: 1400,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

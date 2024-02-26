@@ -19,29 +19,200 @@
     <label for="clientName">Client Name:</label>
     <input type="text" id="clientName" />
 
+    <label for="assetDescription">Asset Description:</label>
+    <input type="text" id="assetDescription" />
+
+    <label for="VIN_serialNum">VIN/Serial Number:</label>
+    <input type="text" id="VIN_serialNum" />
+
+    <label for="licensePlate">License Plate:</label>
+    <input type="text" id="licensePlate" />
+
+    <label for="registeredOwner">Registered Owner:</label>
+    <input type="text" id="registeredOwner" />
+
+    <label for="lienHolder">Lien Holder:</label>
+    <input type="text" id="lienHolder" />
+
+    <label for="daysOfStorage">Days of Storage:</label>
+    <input type="text" id="daysOfStorage" />
+
+    <label for="storageRate">Storage Rate:</label>
+    <input type="text" id="storageRate" />
+
+    <label for="amountOfArrears">Amount of Arrears:</label>
+    <input type="text" id="amountOfArrears" />
+
+    <label for="daysOfStorageCost">Days of Storage Cost:</label>
+    <input type="text" id="daysOfStorageCost" />
+
+    <label for="bailiffCosts">Bailiff Costs:</label>
+    <input type="text" id="bailiffCosts" />
+
+    <label for="totalOfStorageRate">Total of Storage Rate:</label>
+    <input type="text" id="totalOfStorageRate" />
+
+    <label for="towingCost">Towing Cost:</label>
+    <input type="text" id="towingCost" />
+
+    <label for="storageCosts">Storage Costs:</label>
+    <input type="text" id="storageCosts" />
+
+    <label for="NOICosts">NOI Costs:</label>
+    <input type="text" id="NOICosts" />
+
+    <label for="HSTOnCosts">HST On Costs:</label>
+    <input type="text" id="HSTOnCosts" />
+
+    <label for="totalCostsToDate">Total Costs to Date:</label>
+    <input type="text" id="totalCostsToDate" />
+
+    <label for="amountDueToRedeem">Amount Due to Redeem:</label>
+    <input type="text" id="amountDueToRedeem" />
+
+    <label for="closingDate">Closing Date:</label>
+    <input type="text" id="closingDate" />
+
+    <label for="formDate">Form Date:</label>
+    <input type="text" id="formDate" />
+
+    <label for="dateOfAdditionalCharges">Date of Additional Charges:</label>
+    <input type="text" id="dateOfAdditionalCharges" />
+
+    <label for="repoDate">Repo Date:</label>
+    <input type="text" id="repoDate" />
+
+    <label for="dateNOISent">Date NOI Sent:</label>
+    <input type="text" id="dateNOISent" />
+
+    <label for="staffAffidavitName">Staff Affidavit Name:</label>
+    <input type="text" id="staffAffidavitName" />
+
+    <label for="registeredOwnerCont">Registered Owner Contact:</label>
+    <input type="text" id="registeredOwnerCont" />
+
+    <label for="Affidavit_Date1">Affidavit Date 1:</label>
+    <input type="text" id="Affidavit_Date1" />
+
+    <label for="Affidavit_Date2">Affidavit Date 2:</label>
+    <input type="text" id="Affidavit_Date2" />
+
     <h2 id="result"></h2>
 
     <button id="generateButton">Generate PDF</button>
 
     <script>
-      const { ipcRenderer } = require('electron');
+      const { ipcRenderer } = require("electron");
       document.addEventListener("DOMContentLoaded", () => {
         const selection = document.getElementById("template");
         const clientNameInput = document.getElementById("clientName");
+        const assetDescriptionInput =
+          document.getElementById("assetDescription");
+        const VIN_serialNumInput = document.getElementById("VIN_serialNum");
+        const licensePlateInput = document.getElementById("licensePlate");
+        const registeredOwnerInput = document.getElementById("registeredOwner");
+        const lienHolderInput = document.getElementById("lienHolder");
+        const daysOfStorageInput = document.getElementById("daysOfStorage");
+        const storageRateInput = document.getElementById("storageRate");
+        const amountOfArrearsInput = document.getElementById("amountOfArrears");
+        const daysOfStorageCostInput =
+          document.getElementById("daysOfStorageCost");
+        const bailiffCostsInput = document.getElementById("bailiffCosts");
+        const totalOfStorageRateInput =
+          document.getElementById("totalOfStorageRate");
+        const towingCostInput = document.getElementById("towingCost");
+        const storageCostsInput = document.getElementById("storageCosts");
+        const NOICostsInput = document.getElementById("NOICosts");
+        const HSTOnCostsInput = document.getElementById("HSTOnCosts");
+        const totalCostsToDateInput =
+          document.getElementById("totalCostsToDate");
+        const amountDueToRedeemInput =
+          document.getElementById("amountDueToRedeem");
+        const closingDateInput = document.getElementById("closingDate");
+        const formDateInput = document.getElementById("formDate");
+        const dateOfAdditionalChargesInput = document.getElementById(
+          "dateOfAdditionalCharges"
+        );
+        const repoDateInput = document.getElementById("repoDate");
+        const dateNOISentInput = document.getElementById("dateNOISent");
+        const staffAffidavitNameInput =
+          document.getElementById("staffAffidavitName");
+        const registeredOwnerContInput = document.getElementById(
+          "registeredOwnerCont"
+        );
+        const Affidavit_Date1Input = document.getElementById("Affidavit_Date1");
+        const Affidavit_Date2Input = document.getElementById("Affidavit_Date2");
         const result = document.getElementById("result");
         const generateButton = document.getElementById("generateButton");
 
         generateButton.addEventListener("click", () => {
-            const templatePath = selection.value;
-            const clientName = clientNameInput.value;
-            ipcRenderer.send('generate-pdf', { templatePath, clientName });
+          const templatePath = selection.value;
+          // Retrieve values from input fields
+          const clientName = clientNameInput.value;
+          const assetDescription = assetDescriptionInput.value;
+          const VIN_serialNum = VIN_serialNumInput.value;
+          const licensePlate = licensePlateInput.value;
+          const registeredOwner = registeredOwnerInput.value;
+          const lienHolder = lienHolderInput.value;
+          const daysOfStorage = daysOfStorageInput.value;
+          const storageRate = storageRateInput.value;
+          const amountOfArrears = amountOfArrearsInput.value;
+          const daysOfStorageCost = daysOfStorageCostInput.value;
+          const bailiffCosts = bailiffCostsInput.value;
+          const totalOfStorageRate = totalOfStorageRateInput.value;
+          const towingCost = towingCostInput.value;
+          const storageCosts = storageCostsInput.value;
+          const NOICosts = NOICostsInput.value;
+          const HSTOnCosts = HSTOnCostsInput.value;
+          const totalCostsToDate = totalCostsToDateInput.value;
+          const amountDueToRedeem = amountDueToRedeemInput.value;
+          const closingDate = closingDateInput.value;
+          const formDate = formDateInput.value;
+          const dateOfAdditionalCharges = dateOfAdditionalChargesInput.value;
+          const repoDate = repoDateInput.value;
+          const dateNOISent = dateNOISentInput.value;
+          const staffAffidavitName = staffAffidavitNameInput.value;
+          const registeredOwnerCont = registeredOwnerContInput.value;
+          const Affidavit_Date1 = Affidavit_Date1Input.value;
+          const Affidavit_Date2 = Affidavit_Date2Input.value;
+          // Sending data via IPCRenderer
+          ipcRenderer.send("generate-pdf", {
+            templatePath,
+            clientName,
+            assetDescription,
+            VIN_serialNum,
+            licensePlate,
+            registeredOwner,
+            lienHolder,
+            daysOfStorage,
+            storageRate,
+            amountOfArrears,
+            daysOfStorageCost,
+            bailiffCosts,
+            totalOfStorageRate,
+            towingCost,
+            storageCosts,
+            NOICosts,
+            HSTOnCosts,
+            totalCostsToDate,
+            amountDueToRedeem,
+            closingDate,
+            formDate,
+            dateOfAdditionalCharges,
+            repoDate,
+            dateNOISent,
+            staffAffidavitName,
+            registeredOwnerCont,
+            Affidavit_Date1,
+            Affidavit_Date2,
+          });
         });
 
-        ipcRenderer.on('pdf-generated', (event, pdfBytes) => {
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob);
-            window.open(url);
-            result.innerText = `PDF generated: ${templatePath}`;
+        ipcRenderer.on("pdf-generated", (event, pdfBytes) => {
+          const blob = new Blob([pdfBytes], { type: "application/pdf" });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);
+          result.innerText = `PDF generated: ${templatePath}`;
         });
       });
     </script>

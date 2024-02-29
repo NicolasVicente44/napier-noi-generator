@@ -14,27 +14,16 @@ h1 {
   text-align: center;
 }
 
-form {
-  /* Removed flexbox */
-}
-
-/* Existing CSS */
-
-.black-hr {
-  border-top: 1px solid black; /* Black separator */
-  margin-top: 10px; /* Adjust margin as needed */
-}
-
-.gray-hr {
-  border-top: 1px solid #ccc; /* Gray separator */
-  margin-top: 10px; /* Adjust margin as needed */
-}
 
 /* Existing CSS */
 
 button#generateButton {
   display: block;
   margin: 0 auto;
+  border: black solid 2px;
+  border-radius: 1.5em;
+  margin-top: 3em;
+  margin-bottom: 5em;
   padding: 15px 30px; /* Increase padding for a larger button */
   font-size: 18px; /* Increase font size for a larger button */
 }
@@ -70,6 +59,7 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-bottom: 5em;
 }
 
 button:hover {

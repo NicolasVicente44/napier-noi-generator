@@ -5,16 +5,17 @@ const { PDFDocument } = require("pdf-lib");
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 1600,
-    height: 1400,
+    width: 1400,
+    height: 800,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       preload: path.join(__dirname, "preload.js"),
     },
   });
-
+  mainWindow.maximize();
   mainWindow.loadFile(path.join(__dirname, "index.html"));
+
 };
 
 app.on("ready", createWindow);
@@ -58,12 +59,10 @@ ipcMain.on(
       closingDate,
       formDate,
       dateOfAdditionalCharges,
-      assestDescription,
       repoDate,
       dateNOISent,
       staffAffidavitName,
       registeredOwnerCont,
-      descriptionOfAssest,
       Affidavit_Date1,
       Affidavit_Date2,
     }

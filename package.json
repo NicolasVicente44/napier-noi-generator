@@ -1,8 +1,8 @@
 {
   "name": "napier-noi",
-  "productName": "napier-noi",
+  "productName": "Napier NOI",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Napier NOI Electron application",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -20,8 +20,9 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.3.0",
     "@electron-forge/plugin-fuses": "^7.3.0",
     "@electron/fuses": "^1.7.0",
-    "electron": "^29.0.1"
-  },
+    "electron": "^29.0.1",
+    "electron-builder": "^24.12.0"
+  },  
   "keywords": [],
   "author": {
     "name": "Nick Vicente",
@@ -32,5 +33,17 @@
     "electron-squirrel-startup": "^1.0.0",
     "file-saver": "^2.0.5",
     "pdf-lib": "^1.17.1"
+  },
+  "build": {
+    "appId": "com.example.napier-noi",
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "your.app.category.type"
+    },
+    "win": {
+      "target": "nsis"
+    }
   }
 }

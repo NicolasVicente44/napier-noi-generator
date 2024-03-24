@@ -71,7 +71,6 @@ ipcMain.on(
     const storageCostsNum = parseFloat(storageCosts);
     const NOICostsNum = parseFloat(NOICosts);
 
-    
     // Calculate derived fields only if input values are not empty
     const daysOfStorageCost =
       !isNaN(daysOfStorageNum) && !isNaN(storageRateNum)
@@ -80,7 +79,6 @@ ipcMain.on(
     const totalCostsToDate =
       ((amountOfArrearsNum || 0) +
         (bailiffCostsNum || 0) +
-        (daysOfStorageCost || 0)+
         (towingCostNum || 0) +
         (storageCostsNum || 0) +
         (NOICostsNum || 0)) *
@@ -103,7 +101,6 @@ ipcMain.on(
 
     HSTOnCosts = HSTOnly;
 
-    console.log("HST Only:", HSTOnly);
     // Read the template PDF file
     const pdfBytes = await fs.readFile(
       path.join(__dirname, "../templates", templatePath)
@@ -138,8 +135,8 @@ ipcMain.on(
     form
       .getTextField("amountDueToRedeem")
       .setText(amountDueToRedeem ? amountDueToRedeem.toString() : "");
-      form.getTextField("closingDate").setText(closingDate.toString() || "");
-      form.getTextField("formDate").setText(formDate || "");
+    form.getTextField("closingDate").setText(closingDate.toString() || "");
+    form.getTextField("formDate").setText(formDate || "");
     form
       .getTextField("dateOfAdditionalCharges")
       .setText(dateOfAdditionalCharges || "");
@@ -157,3 +154,24 @@ ipcMain.on(
     event.sender.send("pdf-generated", modifiedPdfBytes);
   }
 );
+
+ipcMain.on("upload-files", async (event, { fileData, registeredOwner }) => {
+  try {
+    const directoryPath = path.join(__dirname, "files", registeredOwner); // Directory where files will be saved
+    await fs.mkdir(directoryPath, { recursive: true }); // Create directory if it doesn't exist
+
+    // Copy uploaded files to the specified directory
+    for (const filePath of fileData) {
+      const fileName = path.basename(filePath);
+      const destination = path.join(directoryPath, fileName);
+      await fs.copyFile(filePath, destination);
+    }
+
+    // Send confirmation back to the renderer process
+    event.sender.send("files-uploaded", "Files uploaded successfully");
+  } catch (error) {
+    // Handle errors
+    console.error("Error uploading files:", error);
+    dialog.showErrorBox("Error", "Failed to upload files. Please try again.");
+  }
+});

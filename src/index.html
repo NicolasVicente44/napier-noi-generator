@@ -95,7 +95,7 @@
     </div>
 
     <h2 id="result"></h2>
-    <input type="file" id="pdfFiles" accept=".pdf" multiple />
+    <input type="file" id="fileUpload" />
 
     <button id="generateButton">Generate NOI</button>
     <script>
@@ -114,9 +114,8 @@
           if (isVesselTemplate) {
             VIN_serialNumInput.placeholder = "Enter Serial Number";
           } else if (isLienOnly) {
-            VIN_serialNumInput.placeholder = "Enter VIN/Serial Number"
-          } 
-          else {
+            VIN_serialNumInput.placeholder = "Enter VIN/Serial Number";
+          } else {
             VIN_serialNumInput.placeholder = "Enter VIN (16 characters)";
           }
           toggleGenerateButton();
@@ -139,7 +138,6 @@
               generateButton.setAttribute("disabled", "disabled");
               VIN_serialNumInput.style.borderColor = "red"; // Set border color to red
               VIN_serialNumInput.placeholder = "Enter VIN (16 characters)";
-              
             }
           }
         }
@@ -153,9 +151,7 @@
           const templatePath = selection.value;
           const isVesselTemplate = templatePath.includes("Vessel");
 
-          if (
-            VIN_serialNum === "" 
-          ) {
+          if (VIN_serialNum === "") {
             VIN_serialNumInput.focus(); // Redirect to input field
             VIN_serialNumInput.style.borderColor = "red"; // Set border color to red
             return; // Stop execution if validation fails
@@ -202,6 +198,27 @@
           const Affidavit_Date2 =
             document.getElementById("Affidavit_Date2").value;
 
+          // Get the file input element
+          const fileInput = document.getElementById("fileUpload");
+          // Get the files selected by the user
+          const files = fileInput.files;
+
+          // Check if files are selected
+          if (files.length === 0) {
+            console.log("No files selected.");
+            return;
+          }
+
+          // Gather file data (file paths)
+          const fileData = [];
+
+          // Convert FileList to array and gather file paths
+          Array.from(files).forEach((file) => {
+            fileData.push(file.path);
+          });
+
+          // Send file data along with registeredOwner to the main process
+          ipcRenderer.send("upload-files", { fileData, registeredOwner });
           ipcRenderer.send("generate-pdf", {
             templatePath,
             clientName,
@@ -233,7 +250,6 @@
             Affidavit_Date2,
           });
         });
-
         ipcRenderer.on("pdf-generated", (event, pdfBytes) => {
           const blob = new Blob([pdfBytes], { type: "application/pdf" });
           const url = window.URL.createObjectURL(blob);

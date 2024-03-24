@@ -80,6 +80,7 @@ ipcMain.on(
     const totalCostsToDate =
       ((amountOfArrearsNum || 0) +
         (bailiffCostsNum || 0) +
+        (daysOfStorageCost || 0)+
         (towingCostNum || 0) +
         (storageCostsNum || 0) +
         (NOICostsNum || 0)) *

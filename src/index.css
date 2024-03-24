@@ -73,3 +73,39 @@ button:hover {
 
 
 
+/* CSS for styling the file upload input */
+#fileUpload {
+  display: none; /* Hide the default file upload input */
+}
+
+.file-upload-container {
+  width: 300px; /* Set width as desired */
+  height: 200px; /* Set height as desired */
+  border: 2px dashed #ccc; /* Dashed border */
+  border-radius: 8px; /* Rounded corners */
+  text-align: center; /* Center text vertically and horizontally */
+  display: flex; /* Use flexbox for alignment */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  align-items: center;
+  text-align: center;
+  justify-items: center;
+  margin: 0 auto;
+}
+
+.file-upload-container:hover {
+  border-color: #aaa; /* Darker border color on hover */
+}
+
+.file-upload-label {
+  font-size: 18px; /* Set font size as desired */
+  color: #777; /* Text color */
+  display: flex;
+  justify-content: center;
+}
+
+/* Optional: Styles for when files are being dragged over */
+.file-upload-container.dragover {
+  background-color: #f0f0f0; /* Light gray background when dragging over */
+}

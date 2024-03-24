@@ -95,8 +95,13 @@
     </div>
 
     <h2 id="result"></h2>
-    <input type="file" id="fileUpload" />
-
+    <div class="file-upload-container" id="fileUploadContainer">
+      <label for="fileUpload" class="file-upload-label">
+        Drag and drop files here or click to select files
+      </label>
+      <input type="file" id="fileUpload" multiple>
+    </div>
+    
     <button id="generateButton">Generate NOI</button>
     <script>
       const { ipcRenderer } = require("electron");

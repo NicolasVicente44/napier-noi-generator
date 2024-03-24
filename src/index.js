@@ -70,27 +70,39 @@ ipcMain.on(
     const towingCostNum = parseFloat(towingCost);
     const storageCostsNum = parseFloat(storageCosts);
     const NOICostsNum = parseFloat(NOICosts);
-    let HSTOnCostsNum = parseFloat(HSTOnCosts);
 
+    
     // Calculate derived fields only if input values are not empty
     const daysOfStorageCost =
       !isNaN(daysOfStorageNum) && !isNaN(storageRateNum)
         ? daysOfStorageNum * storageRateNum
         : null;
     const totalCostsToDate =
+      ((amountOfArrearsNum || 0) +
+        (bailiffCostsNum || 0) +
+        (towingCostNum || 0) +
+        (storageCostsNum || 0) +
+        (NOICostsNum || 0)) *
+      1.13;
+    const amountDueToRedeem =
+      (amountOfArrearsNum || 0) + (totalCostsToDate || 0);
+
+    const totalAmountBeforeHST =
       (amountOfArrearsNum || 0) +
       (bailiffCostsNum || 0) +
       (towingCostNum || 0) +
       (storageCostsNum || 0) +
-      (NOICostsNum || 0) +
-      (HSTOnCostsNum || 0);
-    const amountDueToRedeem =
-      (amountOfArrearsNum || 0) +
-      (daysOfStorageCost || 0) +
-      (bailiffCostsNum || 0) +
-      (NOICostsNum || 0) +
-      (HSTOnCostsNum || 0);
+      (NOICostsNum || 0);
 
+    const HST = totalAmountBeforeHST * 0.13; // HST rate is 13%, or 0.13
+
+    const totalAmountWithHST = totalAmountBeforeHST + HST;
+
+    const HSTOnly = totalAmountWithHST - totalAmountBeforeHST;
+
+    HSTOnCosts = HSTOnly;
+
+    console.log("HST Only:", HSTOnly);
     // Read the template PDF file
     const pdfBytes = await fs.readFile(
       path.join(__dirname, "../templates", templatePath)
@@ -107,7 +119,7 @@ ipcMain.on(
     form.getTextField("licensePlate").setText(licensePlate || "");
     form.getTextField("registeredOwner").setText(registeredOwner || "");
     form.getTextField("lienHolder").setText(lienHolder || "");
-    form.getTextField("daysOfStorage").setText(daysOfStorage || "");
+    form.getTextField("daysOfStorage").setText(daysOfStorage + " days " || "");
     form.getTextField("storageRate").setText(storageRate || "");
     form.getTextField("amountOfArrears").setText(amountOfArrears || "");
     form
@@ -118,15 +130,15 @@ ipcMain.on(
     form.getTextField("towingCost").setText(towingCost || "");
     form.getTextField("storageCosts").setText(storageCosts || "");
     form.getTextField("NOICosts").setText(NOICosts || "");
-    form.getTextField("HSTOnCosts").setText(HSTOnCosts || "");
+    form.getTextField("HSTOnCosts").setText(HSTOnCosts.toFixed(2) || ""); // Use HSTOnCosts instead of HSTOnly
     form
       .getTextField("totalCostsToDate")
       .setText(totalCostsToDate ? totalCostsToDate.toString() : "");
     form
       .getTextField("amountDueToRedeem")
       .setText(amountDueToRedeem ? amountDueToRedeem.toString() : "");
-    form.getTextField("closingDate").setText(closingDate || "");
-    form.getTextField("formDate").setText(formDate || "");
+      form.getTextField("closingDate").setText(closingDate.toString() || "");
+      form.getTextField("formDate").setText(formDate || "");
     form
       .getTextField("dateOfAdditionalCharges")
       .setText(dateOfAdditionalCharges || "");

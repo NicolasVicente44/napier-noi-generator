@@ -32,7 +32,12 @@
         <label for="assetDescription">Asset Description:</label>
         <input type="text" id="assetDescription" />
         <label for="VIN_serialNum">VIN/Serial Number:</label>
-        <input type="text" id="VIN_serialNum" />
+        <input
+          type="text"
+          id="VIN_serialNum"
+          placeholder="Enter VIN (16 characters)"
+        />
+
         <label for="licensePlate">License Plate:</label>
         <input type="text" id="licensePlate" />
         <label for="registeredOwner">Registered Owner:</label>
@@ -89,123 +94,146 @@
     </div>
 
     <h2 id="result"></h2>
+    <input type="file" id="pdfFiles" accept=".pdf" multiple />
 
-    <button id="generateButton">Generate PDF</button>
+    <button id="generateButton">Generate NOI</button>
+<script>
+  const { ipcRenderer } = require("electron");
 
-    <script>
-      const { ipcRenderer } = require("electron");
-      document.addEventListener("DOMContentLoaded", () => {
-        const selection = document.getElementById("template");
-        const clientNameInput = document.getElementById("clientName");
-        const assetDescriptionInput =
-          document.getElementById("assetDescription");
-        const VIN_serialNumInput = document.getElementById("VIN_serialNum");
-        const licensePlateInput = document.getElementById("licensePlate");
-        const registeredOwnerInput = document.getElementById("registeredOwner");
-        const lienHolderInput = document.getElementById("lienHolder");
-        const daysOfStorageInput = document.getElementById("daysOfStorage");
-        const storageRateInput = document.getElementById("storageRate");
-        const amountOfArrearsInput = document.getElementById("amountOfArrears");
-        const daysOfStorageCostInput =
-          document.getElementById("daysOfStorageCost");
-        const bailiffCostsInput = document.getElementById("bailiffCosts");
-        const totalOfStorageRateInput =
-          document.getElementById("totalOfStorageRate");
-        const towingCostInput = document.getElementById("towingCost");
-        const storageCostsInput = document.getElementById("storageCosts");
-        const NOICostsInput = document.getElementById("NOICosts");
-        const HSTOnCostsInput = document.getElementById("HSTOnCosts");
-        const totalCostsToDateInput =
-          document.getElementById("totalCostsToDate");
-        const amountDueToRedeemInput =
-          document.getElementById("amountDueToRedeem");
-        const closingDateInput = document.getElementById("closingDate");
-        const formDateInput = document.getElementById("formDate");
-        const dateOfAdditionalChargesInput = document.getElementById(
-          "dateOfAdditionalCharges"
-        );
-        const repoDateInput = document.getElementById("repoDate");
-        const dateNOISentInput = document.getElementById("dateNOISent");
-        const staffAffidavitNameInput =
-          document.getElementById("staffAffidavitName");
-        const registeredOwnerContInput = document.getElementById(
-          "registeredOwnerCont"
-        );
-        const Affidavit_Date1Input = document.getElementById("Affidavit_Date1");
-        const Affidavit_Date2Input = document.getElementById("Affidavit_Date2");
-        const result = document.getElementById("result");
-        const generateButton = document.getElementById("generateButton");
+  document.addEventListener("DOMContentLoaded", () => {
+    const selection = document.getElementById("template");
+    const VIN_serialNumInput = document.getElementById("VIN_serialNum");
+    const generateButton = document.getElementById("generateButton");
 
-        generateButton.addEventListener("click", () => {
-          const templatePath = selection.value;
-          // Retrieve values from input fields
-          const clientName = clientNameInput.value;
-          const assetDescription = assetDescriptionInput.value;
-          const VIN_serialNum = VIN_serialNumInput.value;
-          const licensePlate = licensePlateInput.value;
-          const registeredOwner = registeredOwnerInput.value;
-          const lienHolder = lienHolderInput.value;
-          const daysOfStorage = daysOfStorageInput.value;
-          const storageRate = storageRateInput.value;
-          const amountOfArrears = amountOfArrearsInput.value;
-          const daysOfStorageCost = daysOfStorageCostInput.value;
-          const bailiffCosts = bailiffCostsInput.value;
-          const totalOfStorageRate = totalOfStorageRateInput.value;
-          const towingCost = towingCostInput.value;
-          const storageCosts = storageCostsInput.value;
-          const NOICosts = NOICostsInput.value;
-          const HSTOnCosts = HSTOnCostsInput.value;
-          const totalCostsToDate = totalCostsToDateInput.value;
-          const amountDueToRedeem = amountDueToRedeemInput.value;
-          const closingDate = closingDateInput.value;
-          const formDate = formDateInput.value;
-          const dateOfAdditionalCharges = dateOfAdditionalChargesInput.value;
-          const repoDate = repoDateInput.value;
-          const dateNOISent = dateNOISentInput.value;
-          const staffAffidavitName = staffAffidavitNameInput.value;
-          const registeredOwnerCont = registeredOwnerContInput.value;
-          const Affidavit_Date1 = Affidavit_Date1Input.value;
-          const Affidavit_Date2 = Affidavit_Date2Input.value;
-          // Sending data via IPCRenderer
-          ipcRenderer.send("generate-pdf", {
-            templatePath,
-            clientName,
-            assetDescription,
-            VIN_serialNum,
-            licensePlate,
-            registeredOwner,
-            lienHolder,
-            daysOfStorage,
-            storageRate,
-            amountOfArrears,
-            daysOfStorageCost,
-            bailiffCosts,
-            totalOfStorageRate,
-            towingCost,
-            storageCosts,
-            NOICosts,
-            HSTOnCosts,
-            totalCostsToDate,
-            amountDueToRedeem,
-            closingDate,
-            formDate,
-            dateOfAdditionalCharges,
-            repoDate,
-            dateNOISent,
-            staffAffidavitName,
-            registeredOwnerCont,
-            Affidavit_Date1,
-            Affidavit_Date2,
-          });
-        });
+    selection.addEventListener("change", () => {
+      const templatePath = selection.value;
+      const isVesselTemplate = templatePath.includes("Vessel");
+      if (isVesselTemplate) {
+        VIN_serialNumInput.placeholder = "Enter Serial Number";
+      } else {
+        VIN_serialNumInput.placeholder = "Enter VIN (16 characters)";
+      }
+      toggleGenerateButton();
+    });
 
-        ipcRenderer.on("pdf-generated", (event, pdfBytes) => {
-          const blob = new Blob([pdfBytes], { type: "application/pdf" });
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-          result.innerText = `PDF generated: ${templatePath}`;
-        });
+    function toggleGenerateButton() {
+      const VIN_serialNum = VIN_serialNumInput.value.trim();
+      const templatePath = selection.value;
+      const isVesselTemplate = templatePath.includes("Vessel");
+
+      if (isVesselTemplate) {
+        generateButton.removeAttribute("disabled");
+        VIN_serialNumInput.placeholder = "Enter Serial Number";
+      } else {
+        if (VIN_serialNum.length === 16) {
+          generateButton.removeAttribute("disabled");
+          VIN_serialNumInput.style.borderColor = ""; // Reset border color
+          VIN_serialNumInput.placeholder = "";
+        } else {
+          generateButton.setAttribute("disabled", "disabled");
+          VIN_serialNumInput.style.borderColor = "red"; // Set border color to red
+          VIN_serialNumInput.placeholder = "Enter VIN (16 characters)";
+        }
+      }
+    }
+
+    VIN_serialNumInput.addEventListener("input", toggleGenerateButton);
+
+    toggleGenerateButton();
+
+    generateButton.addEventListener("click", () => {
+      const VIN_serialNum = VIN_serialNumInput.value.trim();
+      const templatePath = selection.value;
+      const isVesselTemplate = templatePath.includes("Vessel");
+      
+      if (VIN_serialNum === "" || (!isVesselTemplate && VIN_serialNum.length !== 16)) {
+        VIN_serialNumInput.focus(); // Redirect to input field
+        VIN_serialNumInput.style.borderColor = "red"; // Set border color to red
+        return; // Stop execution if validation fails
+      }
+
+      const clientName = document.getElementById("clientName").value;
+      const assetDescription =
+        document.getElementById("assetDescription").value;
+      const licensePlate = document.getElementById("licensePlate").value;
+      const registeredOwner =
+        document.getElementById("registeredOwner").value;
+      const lienHolder = document.getElementById("lienHolder").value;
+      const daysOfStorage = document.getElementById("daysOfStorage").value;
+      const storageRate = document.getElementById("storageRate").value;
+      const amountOfArrears =
+        document.getElementById("amountOfArrears").value;
+      const daysOfStorageCost =
+        document.getElementById("daysOfStorageCost").value;
+      const bailiffCosts = document.getElementById("bailiffCosts").value;
+      const totalOfStorageRate =
+        document.getElementById("totalOfStorageRate").value;
+      const towingCost = document.getElementById("towingCost").value;
+      const storageCosts = document.getElementById("storageCosts").value;
+      const NOICosts = document.getElementById("NOICosts").value;
+      const HSTOnCosts = document.getElementById("HSTOnCosts").value;
+      const totalCostsToDate =
+        document.getElementById("totalCostsToDate").value;
+      const amountDueToRedeem =
+        document.getElementById("amountDueToRedeem").value;
+      const closingDate = document.getElementById("closingDate").value;
+      const formDate = document.getElementById("formDate").value;
+      const dateOfAdditionalCharges = document.getElementById(
+        "dateOfAdditionalCharges"
+      ).value;
+      const repoDate = document.getElementById("repoDate").value;
+      const dateNOISent = document.getElementById("dateNOISent").value;
+      const staffAffidavitName =
+        document.getElementById("staffAffidavitName").value;
+      const registeredOwnerCont = document.getElementById(
+        "registeredOwnerCont"
+      ).value;
+      const Affidavit_Date1 =
+        document.getElementById("Affidavit_Date1").value;
+      const Affidavit_Date2 =
+        document.getElementById("Affidavit_Date2").value;
+
+      ipcRenderer.send("generate-pdf", {
+        templatePath,
+        clientName,
+        assetDescription,
+        VIN_serialNum,
+        licensePlate,
+        registeredOwner,
+        lienHolder,
+        daysOfStorage,
+        storageRate,
+        amountOfArrears,
+        daysOfStorageCost,
+        bailiffCosts,
+        totalOfStorageRate,
+        towingCost,
+        storageCosts,
+        NOICosts,
+        HSTOnCosts,
+        totalCostsToDate,
+        amountDueToRedeem,
+        closingDate,
+        formDate,
+        dateOfAdditionalCharges,
+        repoDate,
+        dateNOISent,
+        staffAffidavitName,
+        registeredOwnerCont,
+        Affidavit_Date1,
+        Affidavit_Date2,
       });
-    </script>
+    });
+
+    ipcRenderer.on("pdf-generated", (event, pdfBytes) => {
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+      result.innerText = `PDF generated: ${selection.value}`;
+    });
+  });
+</script>
+
+    
   </body>
 </html>

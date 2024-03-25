@@ -97,7 +97,7 @@
     <h2 id="result"></h2>
     <div class="file-upload-container" id="fileUploadContainer">
       <label for="fileUpload" class="file-upload-label">
-        Drag and drop files here or click to select files
+      Click to select files
       </label>
       <input type="file" id="fileUpload" multiple>
     </div>
@@ -221,6 +221,9 @@
           Array.from(files).forEach((file) => {
             fileData.push(file.path);
           });
+
+
+ 
 
           // Send file data along with registeredOwner to the main process
           ipcRenderer.send("upload-files", { fileData, registeredOwner });

@@ -10,6 +10,8 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      webSecurity: false,
+
       preload: path.join(__dirname, "preload.js"),
     },
   });
@@ -157,7 +159,13 @@ ipcMain.on(
 
 ipcMain.on("upload-files", async (event, { fileData, registeredOwner }) => {
   try {
-    const directoryPath = path.join(__dirname, "files", registeredOwner); // Directory where files will be saved
+    const directoryPath = path.join(
+      __dirname,
+      "files",
+      registeredOwner
+        ? registeredOwner + " NOI File"
+        : "No Registered Owner NOI Files"
+    ); // Directory where files will be saved
     await fs.mkdir(directoryPath, { recursive: true }); // Create directory if it doesn't exist
 
     // Copy uploaded files to the specified directory

@@ -85,25 +85,22 @@ ipcMain.on(
         (bailiffCostsNum || 0) +
         (towingCostNum || 0) +
         (storageCostsNum || 0) +
-        (NOICostsNum || 0)) *
-      1.13;
-    const amountDueToRedeem =
-      (amountOfArrearsNum || 0) + (totalCostsToDate || 0);
+        (NOICostsNum || 0) +
+        (daysOfStorageCost || 0))
+        
+  
+    
 
-    const totalAmountBeforeHST =
-      (amountOfArrearsNum || 0) +
-      (bailiffCostsNum || 0) +
-      (towingCostNum || 0) +
-      (storageCostsNum || 0) +
-      (NOICostsNum || 0);
+    const HST = totalCostsToDate * 0.13; // HST rate is 13%, or 0.13
 
-    const HST = totalAmountBeforeHST * 0.13; // HST rate is 13%, or 0.13
+    const totalAmountWithHST = totalCostsToDate + HST;
 
-    const totalAmountWithHST = totalAmountBeforeHST + HST;
-
-    const HSTOnly = totalAmountWithHST - totalAmountBeforeHST;
+    const HSTOnly = totalAmountWithHST - totalCostsToDate;
 
     HSTOnCosts = HSTOnly;
+    const amountDueToRedeem =
+    (HSTOnly || 0) + (totalCostsToDate || 0);
+
 
     // Read the template PDF file
     const pdfBytes = await fs.readFile(

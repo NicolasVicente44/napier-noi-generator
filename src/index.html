@@ -17,7 +17,7 @@
       <option value="NOI Retain Vessel.pdf">NOI Retain Vessel</option>
       <option value="NOI Sell Vehicle.pdf">NOI Sell Vehicle</option>
       <option value="NOI Sell Vessel.pdf">NOI Sell Vessel</option>
-      <option value="NOI Lien Only.pdf">NOI Lien Only</option>
+      <option value="NOI Lien Only.pdf">Lien Only</option>
     </select>
 
     <div class="grid-container">
@@ -94,15 +94,17 @@
       </div>
     </div>
 
-    <h2 id="result"></h2>
-    <div class="file-upload-container" id="fileUploadContainer">
+    <div style="margin-top: 2em;" class="file-upload-container" id="fileUploadContainer">
       <label for="fileUpload" class="file-upload-label">
-      Click to select files
+        Drag and drop files here or click to select files
       </label>
-      <input type="file" id="fileUpload" multiple>
+      <input type="file" id="fileUpload" multiple />
     </div>
-    
+
+    <div id="uploadedFiles"></div>
+
     <button id="generateButton">Generate NOI</button>
+
     <script>
       const { ipcRenderer } = require("electron");
 
@@ -110,6 +112,8 @@
         const selection = document.getElementById("template");
         const VIN_serialNumInput = document.getElementById("VIN_serialNum");
         const generateButton = document.getElementById("generateButton");
+        const dropArea = document.getElementById("fileUploadContainer");
+        const uploadedFilesContainer = document.getElementById("uploadedFiles");
 
         selection.addEventListener("change", () => {
           const templatePath = selection.value;
@@ -208,12 +212,6 @@
           // Get the files selected by the user
           const files = fileInput.files;
 
-          // Check if files are selected
-          if (files.length === 0) {
-            console.log("No files selected.");
-            return;
-          }
-
           // Gather file data (file paths)
           const fileData = [];
 
@@ -221,9 +219,6 @@
           Array.from(files).forEach((file) => {
             fileData.push(file.path);
           });
-
-
- 
 
           // Send file data along with registeredOwner to the main process
           ipcRenderer.send("upload-files", { fileData, registeredOwner });
@@ -264,6 +259,64 @@
           window.open(url);
           result.innerText = `PDF generated: ${selection.value}`;
         });
+
+        // Prevent default behavior for drag-and-drop events
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+          dropArea.addEventListener(eventName, preventDefaults, false);
+          document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Highlight drop area when a file is dragged over it
+        ["dragenter", "dragover"].forEach((eventName) => {
+          dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        // Un-highlight drop area when a file is dragged out of it
+        ["dragleave", "drop"].forEach((eventName) => {
+          dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        // Handle dropped files
+        dropArea.addEventListener("drop", handleDrop, false);
+
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
+        function highlight(e) {
+          dropArea.classList.add("highlight");
+        }
+
+        function unhighlight(e) {
+          dropArea.classList.remove("highlight");
+        }
+
+        function handleDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+
+          // Pass dropped files to the file input
+          document.getElementById("fileUpload").files = files;
+
+          // Display uploaded files
+          displayUploadedFiles(files);
+        }
+
+        function displayUploadedFiles(files) {
+          // Clear previous uploads
+          uploadedFilesContainer.innerHTML = "";
+
+          Array.from(files).forEach((file) => {
+            const fileItem = document.createElement("div");
+            fileItem.textContent = file.name; // Display file name
+            fileItem.style.display = "flex"; // Set display to flex
+            fileItem.style.justifyContent = "center"; // Center content horizontally
+            fileItem.style.alignItems = "center"; // Center content vertically
+            fileItem.style.marginBottom = "10px"; // Add some bottom margin for spacing
+            uploadedFilesContainer.appendChild(fileItem);
+          });
+        }
       });
     </script>
   </body>

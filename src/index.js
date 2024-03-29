@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs").promises;
 const { PDFDocument } = require("pdf-lib");
+require('electron-reload')(__dirname);
+
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({

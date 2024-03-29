@@ -21,7 +21,8 @@
     "@electron-forge/plugin-fuses": "^7.3.0",
     "@electron/fuses": "^1.7.0",
     "electron": "^29.0.1",
-    "electron-builder": "^24.12.0"
+    "electron-builder": "^24.12.0",
+    "electron-reload": "^2.0.0-alpha.1"
   },
   "keywords": [],
   "author": {

@@ -10,7 +10,7 @@
     <h1>NOI Cover Sheet</h1>
 
     <h1>Generate NOI PDF</h1>
-    <h2>NOI Template Selection:</h2>
+    <h2>NOI template Selection:</h2>
     <label for="template">Select Template:</label>
     <select id="template">
       <option value="NOI Retain Vehicle.pdf">NOI Retain Vehicle</option>
@@ -27,7 +27,25 @@
         <input type="text" id="clientName" />
         <label for="lienHolder">Lien Holder:</label>
         <input type="text" id="lienHolder" />
+    
       </div>
+
+      <div class="grid-container">
+        <div>
+          <h2>Owner/Debtor Information:</h2>
+
+      <label for="registeredOwner">Registered Owner (This field will name the folder in the database):</label>
+      <input type="text" id="registeredOwner" />
+
+      <label for="registeredOwnerCont"
+        >Registered Owner Continued (For very long names or multiple
+        owners):</label
+      >
+      <input type="text" id="registeredOwnerCont" />
+        </div>
+
+
+
       <div>
         <h2>Asset Information:</h2>
         <label for="assetDescription">Asset Description:</label>
@@ -41,10 +59,6 @@
 
         <label for="licensePlate">License Plate:</label>
         <input type="text" id="licensePlate" />
-        <label for="registeredOwner">Registered Owner:</label>
-        <input type="text" id="registeredOwner" />
-        <label for="registeredOwnerCont">Registered Owner Continued:</label>
-        <input type="text" id="registeredOwnerCont" />
       </div>
       <div>
         <h2>Cost/Fee Information:</h2>
@@ -54,24 +68,18 @@
         <input type="text" id="storageRate" />
         <label for="amountOfArrears">Amount of Arrears:</label>
         <input type="text" id="amountOfArrears" />
-        <label for="daysOfStorageCost">Days of Storage Cost:</label>
-        <input type="text" id="daysOfStorageCost" />
+
         <label for="bailiffCosts">Bailiff Costs:</label>
         <input type="text" id="bailiffCosts" />
-        <label for="totalOfStorageRate">Total of Storage Rate:</label>
-        <input type="text" id="totalOfStorageRate" />
+
         <label for="towingCost">Towing Cost:</label>
         <input type="text" id="towingCost" />
-        <label for="storageCosts">Storage Costs:</label>
-        <input type="text" id="storageCosts" />
+       
         <label for="NOICosts">NOI Costs:</label>
         <input type="text" id="NOICosts" />
-        <label for="HSTOnCosts">HST On Costs:</label>
-        <input type="text" id="HSTOnCosts" />
-        <label for="totalCostsToDate">Total Costs to Date:</label>
-        <input type="text" id="totalCostsToDate" />
-        <label for="amountDueToRedeem">Amount Due to Redeem:</label>
-        <input type="text" id="amountDueToRedeem" />
+    
+       
+  
       </div>
       <div>
         <h2>Date Information:</h2>
@@ -79,7 +87,7 @@
         <input type="text" id="closingDate" />
         <label for="formDate">Form Date:</label>
         <input type="text" id="formDate" />
-        <label for="dateOfAdditionalCharges">Date of Additional Charges:</label>
+        <label for="dateOfAdditionalCharges">Date When Additional Charges Will Be Laid:</label>
         <input type="text" id="dateOfAdditionalCharges" />
         <label for="repoDate">Repo Date:</label>
         <input type="text" id="repoDate" />
@@ -87,14 +95,17 @@
         <input type="text" id="dateNOISent" />
         <label for="staffAffidavitName">Affidavit Staff Member's Name:</label>
         <input type="text" id="staffAffidavitName" />
-        <label for="Affidavit_Date1">Affidavit Date 1:</label>
-        <input type="text" id="Affidavit_Date1" />
-        <label for="Affidavit_Date2">Affidavit Date 2:</label>
-        <input type="text" id="Affidavit_Date2" />
+        
+        
+        
       </div>
     </div>
 
-    <div style="margin-top: 2em;" class="file-upload-container" id="fileUploadContainer">
+    <div
+      style="margin-top: 2em"
+      class="file-upload-container"
+      id="fileUploadContainer"
+    >
       <label for="fileUpload" class="file-upload-label">
         Drag and drop files here or click to select files
       </label>
@@ -177,19 +188,12 @@
           const storageRate = document.getElementById("storageRate").value;
           const amountOfArrears =
             document.getElementById("amountOfArrears").value;
-          const daysOfStorageCost =
-            document.getElementById("daysOfStorageCost").value;
+
           const bailiffCosts = document.getElementById("bailiffCosts").value;
-          const totalOfStorageRate =
-            document.getElementById("totalOfStorageRate").value;
+
           const towingCost = document.getElementById("towingCost").value;
-          const storageCosts = document.getElementById("storageCosts").value;
           const NOICosts = document.getElementById("NOICosts").value;
-          const HSTOnCosts = document.getElementById("HSTOnCosts").value;
-          const totalCostsToDate =
-            document.getElementById("totalCostsToDate").value;
-          const amountDueToRedeem =
-            document.getElementById("amountDueToRedeem").value;
+
           const closingDate = document.getElementById("closingDate").value;
           const formDate = document.getElementById("formDate").value;
           const dateOfAdditionalCharges = document.getElementById(
@@ -202,10 +206,7 @@
           const registeredOwnerCont = document.getElementById(
             "registeredOwnerCont"
           ).value;
-          const Affidavit_Date1 =
-            document.getElementById("Affidavit_Date1").value;
-          const Affidavit_Date2 =
-            document.getElementById("Affidavit_Date2").value;
+        
 
           // Get the file input element
           const fileInput = document.getElementById("fileUpload");
@@ -233,15 +234,9 @@
             daysOfStorage,
             storageRate,
             amountOfArrears,
-            daysOfStorageCost,
             bailiffCosts,
-            totalOfStorageRate,
             towingCost,
-            storageCosts,
             NOICosts,
-            HSTOnCosts,
-            totalCostsToDate,
-            amountDueToRedeem,
             closingDate,
             formDate,
             dateOfAdditionalCharges,
@@ -249,8 +244,6 @@
             dateNOISent,
             staffAffidavitName,
             registeredOwnerCont,
-            Affidavit_Date1,
-            Affidavit_Date2,
           });
         });
         ipcRenderer.on("pdf-generated", (event, pdfBytes) => {
@@ -313,7 +306,9 @@
             fileItem.style.display = "flex"; // Set display to flex
             fileItem.style.justifyContent = "center"; // Center content horizontally
             fileItem.style.alignItems = "center"; // Center content vertically
-            fileItem.style.marginBottom = "10px"; // Add some bottom margin for spacing
+            fileItem.style.marginBottom = "8px"; // Add some bottom margin for spacing
+            fileItem.style.marginTop = "8px"; // Add some bottom margin for spacing
+
             uploadedFilesContainer.appendChild(fileItem);
           });
         }

@@ -1,9 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require("electron");
 const path = require("path");
 const fs = require("fs").promises;
 const { PDFDocument } = require("pdf-lib");
-require('electron-reload')(__dirname);
-
+require("electron-reload")(__dirname);
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -13,12 +12,23 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false,
       webSecurity: false,
-
       preload: path.join(__dirname, "preload.js"),
     },
   });
   mainWindow.maximize();
   mainWindow.loadFile(path.join(__dirname, "index.html"));
+
+  // Create the context menu
+  const contextMenu = new Menu();
+  contextMenu.append(new MenuItem({ label: "Copy", role: "copy" }));
+  contextMenu.append(new MenuItem({ label: "Paste", role: "paste" }));
+
+  // Attach the context menu to mainWindow
+  mainWindow.webContents.on("context-menu", (event, params) => {
+    contextMenu.popup(mainWindow, params.x, params.y);
+  });
+
+  // Rest of your code...
 };
 
 app.on("ready", createWindow);
@@ -34,6 +44,7 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
 ipcMain.on(
   "generate-pdf",
   async (
@@ -81,15 +92,12 @@ ipcMain.on(
         ? daysOfStorageNum * storageRateNum
         : null;
     const totalCostsToDate =
-      ((amountOfArrearsNum || 0) +
-        (bailiffCostsNum || 0) +
-        (towingCostNum || 0) +
-        (storageCostsNum || 0) +
-        (NOICostsNum || 0) +
-        (daysOfStorageCost || 0))
-        
-  
-    
+      (amountOfArrearsNum || 0) +
+      (bailiffCostsNum || 0) +
+      (towingCostNum || 0) +
+      (storageCostsNum || 0) +
+      (NOICostsNum || 0) +
+      (daysOfStorageCost || 0);
 
     const HST = totalCostsToDate * 0.13; // HST rate is 13%, or 0.13
 
@@ -98,9 +106,7 @@ ipcMain.on(
     const HSTOnly = totalAmountWithHST - totalCostsToDate;
 
     HSTOnCosts = HSTOnly;
-    const amountDueToRedeem =
-    (HSTOnly || 0) + (totalCostsToDate || 0);
-
+    const amountDueToRedeem = (HSTOnly || 0) + (totalCostsToDate || 0);
 
     // Read the template PDF file
     const pdfBytes = await fs.readFile(

@@ -79,22 +79,22 @@
         <input type="text" id="NOICosts" />
     
        
-  
+        
       </div>
       <div>
         <h2>Date Information:</h2>
         <label for="closingDate">Closing Date:</label>
-        <input type="text" id="closingDate" />
+        <input placeholder="Enter date in the form YYYY-MM-DD" type="text" id="closingDate" />
         <label for="formDate">Form Date:</label>
-        <input type="text" id="formDate" />
+        <input placeholder="Enter date in the form YYYY-MM-DD" type="text" id="formDate" />
         <label for="dateOfAdditionalCharges">Date When Additional Charges Will Be Laid:</label>
-        <input type="text" id="dateOfAdditionalCharges" />
+        <input placeholder="Enter date in the form YYYY-MM-DD" type="text" id="dateOfAdditionalCharges" />
         <label for="repoDate">Repo Date:</label>
-        <input type="text" id="repoDate" />
+        <input placeholder="Enter date in the form YYYY-MM-DD" type="text" id="repoDate" />
         <label for="dateNOISent">Date NOI Sent:</label>
-        <input type="text" id="dateNOISent" />
+        <input placeholder="Enter date in the form YYYY-MM-DD" type="text" id="dateNOISent" />
         <label for="staffAffidavitName">Affidavit Staff Member's Name:</label>
-        <input type="text" id="staffAffidavitName" />
+        <input  type="text" id="staffAffidavitName" />
         
         
         
@@ -161,66 +161,149 @@
             }
           }
         }
-
+        function validateClosingDate() {
+          const closingDateInput = document.getElementById("closingDate");
+          const closingDate = closingDateInput.value.trim();
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        
+          console.log("Closing Date Value:", closingDate); // Add this line
+        
+          if (closingDate && !dateRegex.test(closingDate)) {
+            // If the closing date format is invalid, display an error message
+            closingDateInput.style.borderColor = "red"; // Set border color to red
+            return false; // Return false to indicate invalid date
+          } else if (closingDate == "") {
+            // If the closing date format is valid, remove error message and reset border color
+            closingDateInput.style.borderColor = ""; // Reset border color
+            return true; // Return true to indicate valid date
+          } else  {
+            // If the closing date format is valid, remove error message and reset border color
+            closingDateInput.style.borderColor = ""; // Reset border color
+            return true; // Return true to indicate valid date
+          }
+        }
         VIN_serialNumInput.addEventListener("input", toggleGenerateButton);
-
+        function validateFormDate() {
+          const formDateInput = document.getElementById("formDate");
+          const formDate = formDateInput.value.trim();
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        
+          if (formDate && !dateRegex.test(formDate)) {
+            formDateInput.style.borderColor = "red";
+            return false;
+          } else {
+            formDateInput.style.borderColor = "";
+            return true;
+          }
+        }
+        
+        function validateAdditionalChargesDate() {
+          const additionalChargesDateInput = document.getElementById("dateOfAdditionalCharges");
+          const additionalChargesDate = additionalChargesDateInput.value.trim();
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        
+          if ( additionalChargesDate &&!dateRegex.test(additionalChargesDate)) {
+            additionalChargesDateInput.style.borderColor = "red";
+            return false;
+          } else {
+            additionalChargesDateInput.style.borderColor = "";
+            return true;
+          }
+        }
+        
+        function validateRepoDate() {
+          const repoDateInput = document.getElementById("repoDate");
+          const repoDate = repoDateInput.value.trim();
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        
+          if ( repoDate &&!dateRegex.test(repoDate)) {
+            repoDateInput.style.borderColor = "red";
+            return false;
+          } else {
+            repoDateInput.style.borderColor = "";
+            return true;
+          }
+        }
+        
+        function validateNOISentDate() {
+          const NOISentDateInput = document.getElementById("dateNOISent");
+          const NOISentDate = NOISentDateInput.value.trim();
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        
+          if (NOISentDate && !dateRegex.test(NOISentDate)) {
+            NOISentDateInput.style.borderColor = "red";
+            return false;
+          } else {
+            NOISentDateInput.style.borderColor = "";
+            return true;
+          }
+        }
         toggleGenerateButton();
-
         generateButton.addEventListener("click", () => {
+          // Validate closing date format
+          if (!validateClosingDate()) {
+            return; // Stop execution if validation fails
+          }
+        
+          // Validate other date fields
+          if (!validateFormDate()) {
+            return; // Stop execution if validation fails
+          }
+        
+          if (!validateAdditionalChargesDate()) {
+            return; // Stop execution if validation fails
+          }
+        
+          if (!validateRepoDate()) {
+            return; // Stop execution if validation fails
+          }
+        
+          if (!validateNOISentDate()) {
+            return; // Stop execution if validation fails
+          }
           const VIN_serialNum = VIN_serialNumInput.value.trim();
           const templatePath = selection.value;
           const isVesselTemplate = templatePath.includes("Vessel");
-
+        
           if (VIN_serialNum === "") {
             VIN_serialNumInput.focus(); // Redirect to input field
             VIN_serialNumInput.style.borderColor = "red"; // Set border color to red
             return; // Stop execution if validation fails
           }
-
+        
+          // Rest of the form submission code...
           const clientName = document.getElementById("clientName").value;
-          const assetDescription =
-            document.getElementById("assetDescription").value;
+          const assetDescription = document.getElementById("assetDescription").value;
           const licensePlate = document.getElementById("licensePlate").value;
-          const registeredOwner =
-            document.getElementById("registeredOwner").value;
+          const registeredOwner = document.getElementById("registeredOwner").value;
           const lienHolder = document.getElementById("lienHolder").value;
           const daysOfStorage = document.getElementById("daysOfStorage").value;
           const storageRate = document.getElementById("storageRate").value;
-          const amountOfArrears =
-            document.getElementById("amountOfArrears").value;
-
+          const amountOfArrears = document.getElementById("amountOfArrears").value;
           const bailiffCosts = document.getElementById("bailiffCosts").value;
-
           const towingCost = document.getElementById("towingCost").value;
           const NOICosts = document.getElementById("NOICosts").value;
-
-          const closingDate = document.getElementById("closingDate").value;
+          const closingDate = document.getElementById("closingDate").value; // Corrected
           const formDate = document.getElementById("formDate").value;
-          const dateOfAdditionalCharges = document.getElementById(
-            "dateOfAdditionalCharges"
-          ).value;
+          const dateOfAdditionalCharges = document.getElementById("dateOfAdditionalCharges").value;
           const repoDate = document.getElementById("repoDate").value;
           const dateNOISent = document.getElementById("dateNOISent").value;
-          const staffAffidavitName =
-            document.getElementById("staffAffidavitName").value;
-          const registeredOwnerCont = document.getElementById(
-            "registeredOwnerCont"
-          ).value;
+          const staffAffidavitName = document.getElementById("staffAffidavitName").value;
+          const registeredOwnerCont = document.getElementById("registeredOwnerCont").value;
         
-
           // Get the file input element
           const fileInput = document.getElementById("fileUpload");
           // Get the files selected by the user
           const files = fileInput.files;
-
+        
           // Gather file data (file paths)
           const fileData = [];
-
+        
           // Convert FileList to array and gather file paths
           Array.from(files).forEach((file) => {
             fileData.push(file.path);
           });
-
+        
           // Send file data along with registeredOwner to the main process
           ipcRenderer.send("upload-files", { fileData, registeredOwner });
           ipcRenderer.send("generate-pdf", {

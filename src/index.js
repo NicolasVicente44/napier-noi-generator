@@ -1,4 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require("electron");
+const moment = require("moment");
+
 const path = require("path");
 const fs = require("fs").promises;
 const { PDFDocument } = require("pdf-lib");
@@ -108,6 +110,15 @@ ipcMain.on(
     HSTOnCosts = HSTOnly;
     const amountDueToRedeem = (HSTOnly || 0) + (totalCostsToDate || 0);
 
+    // Convert formDate to a moment object
+    const formMoment = moment(formDate ? formDate : "", "YYYY-MM-DD");
+
+    // Calculate the closing date by adding 25 days to the form date
+    const closingMoment = formMoment.add(25, "days");
+
+    // Format closingDate to yyyy-mm-dd format
+    const closingDateString = closingMoment.format("YYYY-MM-DD");
+
     // Read the template PDF file
     const pdfBytes = await fs.readFile(
       path.join(__dirname, "../templates", templatePath)
@@ -142,7 +153,7 @@ ipcMain.on(
     form
       .getTextField("amountDueToRedeem")
       .setText(amountDueToRedeem ? amountDueToRedeem.toString() : "");
-    form.getTextField("closingDate").setText(closingDate.toString() || "");
+    form.getTextField("closingDate").setText(closingDateString ? closingDateString : "");
     form.getTextField("formDate").setText(formDate || "");
     form
       .getTextField("dateOfAdditionalCharges")

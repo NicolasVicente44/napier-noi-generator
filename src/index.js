@@ -110,15 +110,6 @@ ipcMain.on(
     HSTOnCosts = HSTOnly;
     const amountDueToRedeem = (HSTOnly || 0) + (totalCostsToDate || 0);
 
-    // Convert formDate to a moment object
-    const formMoment = moment(formDate ? formDate : "", "YYYY-MM-DD");
-
-    // Calculate the closing date by adding 25 days to the form date
-    const closingMoment = formMoment.add(25, "days");
-
-    // Format closingDate to yyyy-mm-dd format
-    const closingDateString = closingMoment.format("YYYY-MM-DD");
-
     // Read the template PDF file
     const pdfBytes = await fs.readFile(
       path.join(__dirname, "../templates", templatePath)
@@ -153,7 +144,7 @@ ipcMain.on(
     form
       .getTextField("amountDueToRedeem")
       .setText(amountDueToRedeem ? amountDueToRedeem.toString() : "");
-    form.getTextField("closingDate").setText(closingDateString ? closingDateString : "");
+
     form.getTextField("formDate").setText(formDate || "");
     form
       .getTextField("dateOfAdditionalCharges")
@@ -164,6 +155,30 @@ ipcMain.on(
     form.getTextField("registeredOwnerCont").setText(registeredOwnerCont || "");
     form.getTextField("Affidavit_Date1").setText(Affidavit_Date1 || "");
     form.getTextField("Affidavit_Date2").setText(Affidavit_Date2 || "");
+
+    // Set closing date based on template type
+    if (templatePath.includes("Retain")) {
+      const formMoment = moment(formDate ? formDate : "", "YYYY-MM-DD");
+      const closingMoment = formMoment.add(45, "days");
+      const closingDateString = closingMoment.format("YYYY-MM-DD");
+      form
+        .getTextField("closingDate")
+        .setText(closingDateString ? closingDateString : "");
+    } else if (templatePath.includes("Sell")) {
+      const formMoment = moment(formDate ? formDate : "", "YYYY-MM-DD");
+      const closingMoment = formMoment.add(25, "days");
+      const closingDateString = closingMoment.format("YYYY-MM-DD");
+      form
+        .getTextField("closingDate")
+        .setText(closingDateString ? closingDateString : "");
+    } else if (templatePath.includes("Lien Only")) {
+      const formMoment = moment(formDate ? formDate : "", "YYYY-MM-DD");
+      const closingMoment = formMoment.add(25, "days");
+      const closingDateString = closingMoment.format("YYYY-MM-DD");
+      form
+        .getTextField("closingDate")
+        .setText(closingDateString ? closingDateString : "");
+    }
 
     // Save the modified PDF document
     const modifiedPdfBytes = await pdfDoc.save();

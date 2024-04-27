@@ -48,8 +48,18 @@
 
       <div>
         <h2>Asset Information:</h2>
-        <label for="assetDescription">Asset Description:</label>
-        <input type="text" id="assetDescription" />
+        
+
+        <label for="assetYear">Year:</label>
+        <input type="text" id="assetYear" />
+        <label for="assetMake">Make:</label>
+        <input type="text" id="assetMake" />
+        <label for="assetModel">Model:</label>
+        <input type="text" id="assetModel" />
+        <label for="assetColour">Colour :</label>
+        <input type="text" id="assetColour" />
+
+
         <label for="VIN_serialNum">VIN/Serial Number:</label>
         <input
           type="text"
@@ -60,6 +70,12 @@
         <label for="licensePlate">License Plate:</label>
         <input type="text" id="licensePlate" />
       </div>
+
+
+
+
+
+
       <div>
         <h2>Cost/Fee Information:</h2>
         <label for="daysOfStorage">Days of Storage:</label>
@@ -83,8 +99,7 @@
       </div>
       <div>
         <h2>Date Information:</h2>
-        <label for="closingDate">Closing Date:</label>
-        <input placeholder="Enter date in the form YYYY-MM-DD" type="text" id="closingDate" />
+        
         <label for="formDate">Form Date:</label>
         <input placeholder="Enter date in the form YYYY-MM-DD" type="text" id="formDate" />
         <label for="dateOfAdditionalCharges">Date When Additional Charges Will Be Laid:</label>
@@ -161,27 +176,8 @@
             }
           }
         }
-        function validateClosingDate() {
-          const closingDateInput = document.getElementById("closingDate");
-          const closingDate = closingDateInput.value.trim();
-          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+       
         
-          console.log("Closing Date Value:", closingDate); // Add this line
-        
-          if (closingDate && !dateRegex.test(closingDate)) {
-            // If the closing date format is invalid, display an error message
-            closingDateInput.style.borderColor = "red"; // Set border color to red
-            return false; // Return false to indicate invalid date
-          } else if (closingDate == "") {
-            // If the closing date format is valid, remove error message and reset border color
-            closingDateInput.style.borderColor = ""; // Reset border color
-            return true; // Return true to indicate valid date
-          } else  {
-            // If the closing date format is valid, remove error message and reset border color
-            closingDateInput.style.borderColor = ""; // Reset border color
-            return true; // Return true to indicate valid date
-          }
-        }
         VIN_serialNumInput.addEventListener("input", toggleGenerateButton);
         function validateFormDate() {
           const formDateInput = document.getElementById("formDate");
@@ -241,9 +237,7 @@
         toggleGenerateButton();
         generateButton.addEventListener("click", () => {
           // Validate closing date format
-          if (!validateClosingDate()) {
-            return; // Stop execution if validation fails
-          }
+         
         
           // Validate other date fields
           if (!validateFormDate()) {
@@ -273,7 +267,11 @@
         
           // Rest of the form submission code...
           const clientName = document.getElementById("clientName").value;
-          const assetDescription = document.getElementById("assetDescription").value;
+          const assetYear = document.getElementById("assetYear").value;
+          const assetMake = document.getElementById("assetMake").value;
+          const assetModel = document.getElementById("assetModel").value;
+          const assetColour = document.getElementById("assetColour").value;
+
           const licensePlate = document.getElementById("licensePlate").value;
           const registeredOwner = document.getElementById("registeredOwner").value;
           const lienHolder = document.getElementById("lienHolder").value;
@@ -283,7 +281,6 @@
           const bailiffCosts = document.getElementById("bailiffCosts").value;
           const towingCost = document.getElementById("towingCost").value;
           const NOICosts = document.getElementById("NOICosts").value;
-          const closingDate = document.getElementById("closingDate").value; // Corrected
           const formDate = document.getElementById("formDate").value;
           const dateOfAdditionalCharges = document.getElementById("dateOfAdditionalCharges").value;
           const repoDate = document.getElementById("repoDate").value;
@@ -309,7 +306,10 @@
           ipcRenderer.send("generate-pdf", {
             templatePath,
             clientName,
-            assetDescription,
+            assetYear,
+            assetMake,
+            assetModel,
+            assetColour,
             VIN_serialNum,
             licensePlate,
             registeredOwner,
@@ -320,7 +320,6 @@
             bailiffCosts,
             towingCost,
             NOICosts,
-            closingDate,
             formDate,
             dateOfAdditionalCharges,
             repoDate,

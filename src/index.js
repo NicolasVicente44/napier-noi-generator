@@ -54,7 +54,10 @@ ipcMain.on(
     {
       templatePath,
       clientName,
-      assetDescription,
+      assetYear,
+      assetMake,
+      assetModel,
+      assetColour,
       VIN_serialNum,
       licensePlate,
       registeredOwner,
@@ -67,7 +70,6 @@ ipcMain.on(
       storageCosts,
       NOICosts,
       HSTOnCosts,
-      closingDate,
       formDate,
       totalOfStorageRate,
       dateOfAdditionalCharges,
@@ -121,7 +123,13 @@ ipcMain.on(
 
     // Set values for all text fields
     form.getTextField("client").setText(clientName || "");
-    form.getTextField("assetDescription").setText(assetDescription || "");
+    // Construct the asset description
+    var assetDescription =
+      assetYear + ", " + assetMake + " " + assetModel + ", " + assetColour;
+
+    // Set the asset description in the PDF
+    form.getTextField("assetDescription").setText(assetDescription);
+
     form.getTextField("VIN/serialNum").setText(VIN_serialNum || "");
     form.getTextField("licensePlate").setText(licensePlate || "");
     form.getTextField("registeredOwner").setText(registeredOwner || "");

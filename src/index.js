@@ -61,6 +61,7 @@ ipcMain.on(
       assetColour,
       VIN_serialNum,
       licensePlate,
+      licenseExpiry,
       registeredOwner,
       lienHolder,
       lienHolderCont,
@@ -124,7 +125,15 @@ ipcMain.on(
     const form = pdfDoc.getForm();
 
     // Set values for all text fields
-    form.getTextField("client").setText(clientName + " " + clientAddress || "");
+    form.getTextField("client").setText(clientName || "");
+    form.getTextField("clientCont").setText(clientAddress || "");
+    form
+      .getTextField("clientAndClientAddress")
+      .setText(
+        (clientName ? clientName : "") +
+          " " +
+          (clientAddress ? clientAddress : "")
+      );
 
     // Construct the asset description
     var assetDescription =
@@ -134,15 +143,22 @@ ipcMain.on(
     form.getTextField("assetDescription").setText(assetDescription);
     form.getTextField("VIN/serialNum").setText(VIN_serialNum || "");
     form.getTextField("licensePlate").setText(licensePlate || "");
+    form.getTextField("licenseExpiry").setText(licenseExpiry || "");
+
     form.getTextField("registeredOwner").setText(registeredOwner || "");
+    form.getTextField("registeredOwnerCont").setText(registeredOwnerCont || "");
+
     form
-      .getTextField("lienHolder")
-      .setText(lienHolder + " " + lienHolderCont || "");
+      .getTextField("registeredOwnerAndRegisteredOwnerAddress")
+      .setText(registeredOwner + " " + registeredOwnerCont || "");
+
+    form.getTextField("lienHolder").setText(lienHolder || "");
+    form.getTextField("lienHolderCont").setText(lienHolderCont || "");
     form.getTextField("daysOfStorage").setText(daysOfStorage + " days " || "");
     form.getTextField("storageRate").setText(storageRate || "");
     form.getTextField("amountOfArrears").setText(amountOfArrears || "");
     form
-      .getTextField("daysOfStorageCost")
+      .getTextField("storageCosts")
       .setText(daysOfStorageCost ? daysOfStorageCost.toString() : "");
     form.getTextField("bailiffCosts").setText(bailiffCosts || "");
     form.getTextField("totalOfStorageRate").setText(totalOfStorageRate || "");

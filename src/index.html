@@ -22,11 +22,20 @@
 
     <div class="grid-container">
       <div>
-        <h2>Client Information:</h2>
+        <h2>Client/Lien Information:</h2>
         <label for="clientName">Client Name:</label>
-        <input type="text" id="clientName" />
-        <label for="lienHolder">Lien Holder:</label>
+        <div id="clientInputContainer">
+          <select id="clientName"></select>
+          <input type="text" id="newClientInput" placeholder="Type to add new client">
+          <button id="addClient">Add</button>
+          <button id="deleteClient">Delete</button>
+        </div>
+        <label for="clientAddress">Client Address:</label>
+        <input type="text" id="clientAddress" />
+        <label for="lienHolder">Lien Holder Name:</label>
         <input type="text" id="lienHolder" />
+        <label for="lienHolderCont">Lien Holder Address:</label>
+        <input type="text" id="lienHolderCont" />
     
       </div>
 
@@ -38,8 +47,7 @@
       <input type="text" id="registeredOwner" />
 
       <label for="registeredOwnerCont"
-        >Registered Owner Continued (For very long names or multiple
-        owners):</label
+        >Registered Owner Address:</label
       >
       <input type="text" id="registeredOwnerCont" />
         </div>
@@ -132,6 +140,62 @@
     <button id="generateButton">Generate NOI</button>
 
     <script>
+
+
+       // Function to retrieve client names from local storage
+    function getClientNames() {
+      return JSON.parse(localStorage.getItem('clientNames')) || [];
+    }
+
+    // Function to save client names to local storage
+    function saveClientNames(clientNames) {
+      localStorage.setItem('clientNames', JSON.stringify(clientNames));
+    }
+
+    // Function to populate client name dropdown
+    function populateClientNameDropdown() {
+      const clientNameDropdown = document.getElementById('clientName');
+      clientNameDropdown.innerHTML = ''; // Clear existing options
+
+      getClientNames().forEach(name => {
+        const option = document.createElement('option');
+        option.text = name;
+        clientNameDropdown.add(option);
+      });
+    }
+
+    // Initialize client name dropdown on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      populateClientNameDropdown();
+    });
+
+    // Add client button click event handler
+    document.getElementById('addClient').addEventListener('click', () => {
+      const newClientName = document.getElementById('newClientInput').value.trim();
+      if (newClientName) {
+        const clientNames = getClientNames();
+        if (!clientNames.includes(newClientName)) {
+          clientNames.push(newClientName);
+          saveClientNames(clientNames);
+          populateClientNameDropdown();
+        }
+        document.getElementById('newClientInput').value = ''; // Clear input field
+      }
+    });
+
+    // Delete client button click event handler
+    document.getElementById('deleteClient').addEventListener('click', () => {
+      const clientNameDropdown = document.getElementById('clientName');
+      const selectedIndex = clientNameDropdown.selectedIndex;
+      if (selectedIndex !== -1) {
+        const clientNames = getClientNames();
+        clientNames.splice(selectedIndex, 1);
+        saveClientNames(clientNames);
+        populateClientNameDropdown();
+      }
+    });
+
+
       const { ipcRenderer } = require("electron");
 
       document.addEventListener("DOMContentLoaded", () => {
@@ -267,6 +331,7 @@
         
           // Rest of the form submission code...
           const clientName = document.getElementById("clientName").value;
+          const clientAddress = document.getElementById("clientAddress").value;
           const assetYear = document.getElementById("assetYear").value;
           const assetMake = document.getElementById("assetMake").value;
           const assetModel = document.getElementById("assetModel").value;
@@ -275,6 +340,8 @@
           const licensePlate = document.getElementById("licensePlate").value;
           const registeredOwner = document.getElementById("registeredOwner").value;
           const lienHolder = document.getElementById("lienHolder").value;
+          const lienHolderCont = document.getElementById("lienHolderCont").value;
+
           const daysOfStorage = document.getElementById("daysOfStorage").value;
           const storageRate = document.getElementById("storageRate").value;
           const amountOfArrears = document.getElementById("amountOfArrears").value;
@@ -306,6 +373,7 @@
           ipcRenderer.send("generate-pdf", {
             templatePath,
             clientName,
+            clientAddress,
             assetYear,
             assetMake,
             assetModel,
@@ -314,6 +382,7 @@
             licensePlate,
             registeredOwner,
             lienHolder,
+            lienHolderCont,
             daysOfStorage,
             storageRate,
             amountOfArrears,

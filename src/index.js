@@ -54,6 +54,7 @@ ipcMain.on(
     {
       templatePath,
       clientName,
+      clientAddress,
       assetYear,
       assetMake,
       assetModel,
@@ -62,6 +63,7 @@ ipcMain.on(
       licensePlate,
       registeredOwner,
       lienHolder,
+      lienHolderCont,
       daysOfStorage,
       storageRate,
       amountOfArrears,
@@ -122,18 +124,20 @@ ipcMain.on(
     const form = pdfDoc.getForm();
 
     // Set values for all text fields
-    form.getTextField("client").setText(clientName || "");
+    form.getTextField("client").setText(clientName + " " + clientAddress || "");
+
     // Construct the asset description
     var assetDescription =
       assetYear + ", " + assetMake + " " + assetModel + ", " + assetColour;
 
     // Set the asset description in the PDF
     form.getTextField("assetDescription").setText(assetDescription);
-
     form.getTextField("VIN/serialNum").setText(VIN_serialNum || "");
     form.getTextField("licensePlate").setText(licensePlate || "");
     form.getTextField("registeredOwner").setText(registeredOwner || "");
-    form.getTextField("lienHolder").setText(lienHolder || "");
+    form
+      .getTextField("lienHolder")
+      .setText(lienHolder + " " + lienHolderCont || "");
     form.getTextField("daysOfStorage").setText(daysOfStorage + " days " || "");
     form.getTextField("storageRate").setText(storageRate || "");
     form.getTextField("amountOfArrears").setText(amountOfArrears || "");
@@ -207,7 +211,7 @@ ipcMain.on("upload-files", async (event, { fileData, registeredOwner }) => {
     ); // Directory where files will be saved
     await fs.mkdir(directoryPath, { recursive: true }); // Create directory if it doesn't exist
 
-    // Copy uploaded files to the specified directory
+    // Copy uploaded files to the specified directory<label for="lienHolder">Lien Holder Name:</label>
     for (const filePath of fileData) {
       const fileName = path.basename(filePath);
       const destination = path.join(directoryPath, fileName);
